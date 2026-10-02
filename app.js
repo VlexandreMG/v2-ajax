@@ -25,8 +25,23 @@ fetch('api.php?action=list')
         liste.innerHTML = '<p class="message">Erreur de chargement.</p>';
     });
 
+let page =localStorage.getItem('page');
+fetch(`api.php?action=list&page=${page}`)
+    .then(reponse => reponse.json())
+    .then(formations => {
+        liste.innerHTML = formations.map(f => `
+            <article class="card">
+                <h2>${e(f.titre)}</h2>
+                <p>${e(f.description)}</p>
+                <span class="badge">${e(f.niveau)}</span>
+            </article>
+        `).join('');
+    })
+    .catch(() => {
+        liste.innerHTML = '<p class="message">Erreur de chargement <p/>'
+    })
 /* Variante « fragment HTML » : le serveur fabrique encore les cards.
 fetch('api.php?action=cards_html')
-    .then(r => r.text())
+    .then(r => r.text()
     .then(html => { liste.innerHTML = html; });
 */
